@@ -2,9 +2,10 @@ import { Box, CircularProgress, Typography } from '@mui/material'
 
 interface SpinnerProps {
   label?: string
+  size?: number
 }
 
-function Spinner({ label = 'Loading...' }: SpinnerProps) {
+function Spinner({ label, size = 24 }: SpinnerProps) {
   return (
     <Box
       role="status"
@@ -13,11 +14,10 @@ function Spinner({ label = 'Loading...' }: SpinnerProps) {
         alignItems: 'center',
         justifyContent: 'center',
         gap: 1.5,
-        py: 4,
       }}
     >
-      <CircularProgress size={24} />
-      <Typography color="text.secondary">{label}</Typography>
+      <CircularProgress size={size} />
+      {label && <Typography color="text.secondary">{label}</Typography>}
     </Box>
   )
 }
