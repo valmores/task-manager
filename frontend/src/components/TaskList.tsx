@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Box, Stack, Typography, Pagination } from '@mui/material'
 import AssignmentIcon from '@mui/icons-material/Assignment'
 import type { Task } from '../types/task'
 import TaskCard from './TaskCard'
 
-const TASKS_PER_PAGE = 7
+const TASKS_PER_PAGE = 6
 
 interface TaskListProps {
   tasks: Task[]
@@ -19,10 +19,14 @@ function TaskList({ tasks }: TaskListProps) {
     page * TASKS_PER_PAGE,
   )
 
-  // Reset to page 1 when tasks change (e.g. filtering)
+  // Stable key representing which tasks are shown (IDs only, not their properties).
+  // Toggling completed changes task data but NOT the ID list, so the page won't reset.
+  // Adding, deleting, or filtering tasks DOES change the ID list, so page resets to 1.
+  const taskIds = useMemo(() => tasks.map((t) => t.id).join(','), [tasks])
+
   useEffect(() => {
     setPage(1)
-  }, [tasks])
+  }, [taskIds])
 
   if (tasks.length === 0) {
     return (
@@ -35,7 +39,7 @@ function TaskList({ tasks }: TaskListProps) {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <Stack spacing={1.5} sx={{ flex: 1 }}>
+      <Stack spacing={1.5} sx={{ flex: 1, minHeight: 0, overflowY: 'auto', pr: 0.5, mt: 3 }}>
         {paginatedTasks.map((task) => (
           <TaskCard key={task.id} task={task} />
         ))}

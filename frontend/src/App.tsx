@@ -27,16 +27,16 @@ function App() {
 
   const filteredTasks = tasks
     ? tasks.filter((task) => {
-        const q = search.toLowerCase()
-        const matchesSearch =
-          task.title.toLowerCase().includes(q) ||
-          (task.description ?? '').toLowerCase().includes(q)
-        const matchesStatus =
-          status === 'all' ||
-          (status === 'completed' && task.completed) ||
-          (status === 'active' && !task.completed)
-        return matchesSearch && matchesStatus
-      })
+      const q = search.toLowerCase()
+      const matchesSearch =
+        task.title.toLowerCase().includes(q) ||
+        (task.description ?? '').toLowerCase().includes(q)
+      const matchesStatus =
+        status === 'all' ||
+        (status === 'completed' && task.completed) ||
+        (status === 'active' && !task.completed)
+      return matchesSearch && matchesStatus
+    })
     : undefined
 
   return (
@@ -94,7 +94,7 @@ function App() {
       )}
       {isError && <ErrorBanner message={error.message} />}
       {filteredTasks && (
-        <Box sx={{ height: 'calc(100vh - 270px)', minHeight: 300 }}>
+        <Box sx={{ height: 'calc(100vh - 220px)', minHeight: 300 }}>
           <TaskList tasks={filteredTasks} />
         </Box>
       )}
