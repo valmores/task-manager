@@ -1,8 +1,6 @@
 import apiClient from './client'
 import type { Task, TaskInput } from '../types/task'
 
-// Same function signatures as taskService.stub.ts, backed by the Django API.
-
 // Artificial latency added to every call so loading states stay visible.
 // Set to 0 to disable.
 const DELAY_MS = 1000
