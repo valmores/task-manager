@@ -35,7 +35,11 @@ function App() {
         </Box>
       )}
       {isError && <ErrorBanner message={error.message} />}
-      {tasks && <TaskList tasks={tasks} />}
+      {tasks && (
+        <Box sx={{ height: 'calc(100vh - 180px)', minHeight: 300 }}>
+          <TaskList tasks={tasks} />
+        </Box>
+      )}
 
       <TaskForm open={formOpen} onClose={() => setFormOpen(false)} />
     </Container>
