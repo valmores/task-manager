@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { Box, Checkbox, IconButton, Paper, Typography } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
 import { useToggleTask } from '../hooks/useTasks'
+import DeleteTaskDialog from './DeleteTaskDialog'
 import TaskForm from './TaskForm'
 import type { Task } from '../types/task'
 
@@ -14,6 +16,7 @@ function TaskCard({ task }: TaskCardProps) {
   const { id, title, description, completed, created_at } = task
   const toggleTask = useToggleTask()
   const [editOpen, setEditOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false)
 
   return (
     <Paper
@@ -63,14 +66,29 @@ function TaskCard({ task }: TaskCardProps) {
           </Typography>
         )}
       </Box>
-      <IconButton
-        size="small"
-        onClick={() => setEditOpen(true)}
-        aria-label={`Edit "${title}"`}
-      >
-        <EditIcon fontSize="small" />
-      </IconButton>
+      <Box sx={{ display: 'flex' }}>
+        <IconButton
+          size="small"
+          onClick={() => setEditOpen(true)}
+          aria-label={`Edit "${title}"`}
+        >
+          <EditIcon fontSize="small" />
+        </IconButton>
+        <IconButton
+          size="small"
+          color="error"
+          onClick={() => setDeleteOpen(true)}
+          aria-label={`Delete "${title}"`}
+        >
+          <DeleteIcon fontSize="small" />
+        </IconButton>
+      </Box>
       <TaskForm open={editOpen} onClose={() => setEditOpen(false)} task={task} />
+      <DeleteTaskDialog
+        open={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        task={task}
+      />
     </Paper>
   )
 }
