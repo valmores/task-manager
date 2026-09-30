@@ -1,15 +1,16 @@
 import { stubTasks } from '../data/stubTasks'
+import type { Task, TaskInput } from '../types/task'
 
 const DELAY_MS = 500
 
 // Set to true to make every call fail, to test the error UI.
 const SIMULATE_ERROR = false
 
-let tasks = stubTasks.map((task) => ({ ...task }))
+let tasks: Task[] = stubTasks.map((task) => ({ ...task }))
 let nextId = Math.max(...tasks.map((task) => task.id)) + 1
 
-const respond = (getValue) =>
-  new Promise((resolve, reject) => {
+const respond = <T>(getValue: () => T) =>
+  new Promise<T>((resolve, reject) => {
     setTimeout(() => {
       if (SIMULATE_ERROR) {
         reject(new Error('Simulated network error'))
@@ -23,19 +24,20 @@ const respond = (getValue) =>
     }, DELAY_MS)
   })
 
-const findTask = (id) => {
-  const task = tasks.find((item) => item.id === Number(id))
+const findTask = (id: number) => {
+  const task = tasks.find((item) => item.id === id)
   if (!task) throw new Error('Task not found')
   return task
 }
 
 // GET /tasks/
-export const getTasks = () => respond(() => tasks.map((task) => ({ ...task })))
+export const getTasks = (): Promise<Task[]> =>
+  respond(() => tasks.map((task) => ({ ...task })))
 
 // POST /tasks/
-export const createTask = ({ title, description }) =>
+export const createTask = ({ title, description }: TaskInput) =>
   respond(() => {
-    const task = {
+    const task: Task = {
       id: nextId++,
       title,
       description: description || null,
@@ -47,7 +49,7 @@ export const createTask = ({ title, description }) =>
   })
 
 // PUT /tasks/{id}/ — title and description only
-export const updateTask = (id, { title, description }) =>
+export const updateTask = (id: number, { title, description }: TaskInput) =>
   respond(() => {
     const task = findTask(id)
     task.title = title
@@ -56,7 +58,7 @@ export const updateTask = (id, { title, description }) =>
   })
 
 // PATCH /tasks/{id}/ — flips the completed flag
-export const toggleTask = (id) =>
+export const toggleTask = (id: number) =>
   respond(() => {
     const task = findTask(id)
     task.completed = !task.completed
@@ -64,8 +66,8 @@ export const toggleTask = (id) =>
   })
 
 // DELETE /tasks/{id}/
-export const deleteTask = (id) =>
+export const deleteTask = (id: number) =>
   respond(() => {
     findTask(id)
-    tasks = tasks.filter((task) => task.id !== Number(id))
+    tasks = tasks.filter((task) => task.id !== id)
   })

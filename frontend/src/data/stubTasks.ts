@@ -1,5 +1,7 @@
+import type { Task } from '../types/task'
+
 // Mirrors the shape returned by the Django API, newest first.
-export const stubTasks = [
+export const stubTasks: Task[] = [
   {
     id: 4,
     title: 'Write README',
