@@ -1,8 +1,12 @@
+import { Container, Typography } from '@mui/material'
+
 function App() {
   return (
-    <main className="container">
-      <h1>Task Manager</h1>
-    </main>
+    <Container maxWidth="sm" sx={{ py: 4 }}>
+      <Typography variant="h4" component="h1" gutterBottom>
+        Task Manager
+      </Typography>
+    </Container>
   )
 }
 
