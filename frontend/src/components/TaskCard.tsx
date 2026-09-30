@@ -1,6 +1,9 @@
-import { Box, Checkbox, Paper, Typography } from '@mui/material'
+import { useState } from 'react'
+import { Box, Checkbox, IconButton, Paper, Typography } from '@mui/material'
+import EditIcon from '@mui/icons-material/Edit'
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
 import { useToggleTask } from '../hooks/useTasks'
+import TaskForm from './TaskForm'
 import type { Task } from '../types/task'
 
 interface TaskCardProps {
@@ -10,6 +13,7 @@ interface TaskCardProps {
 function TaskCard({ task }: TaskCardProps) {
   const { id, title, description, completed, created_at } = task
   const toggleTask = useToggleTask()
+  const [editOpen, setEditOpen] = useState(false)
 
   return (
     <Paper
@@ -59,6 +63,14 @@ function TaskCard({ task }: TaskCardProps) {
           </Typography>
         )}
       </Box>
+      <IconButton
+        size="small"
+        onClick={() => setEditOpen(true)}
+        aria-label={`Edit "${title}"`}
+      >
+        <EditIcon fontSize="small" />
+      </IconButton>
+      <TaskForm open={editOpen} onClose={() => setEditOpen(false)} task={task} />
     </Paper>
   )
 }
