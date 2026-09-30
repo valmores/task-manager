@@ -1,6 +1,6 @@
 function App() {
   return (
-    <main>
+    <main className="container">
       <h1>Task Manager</h1>
     </main>
   )
