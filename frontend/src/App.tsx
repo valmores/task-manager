@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { Box, Button, Container, Typography } from '@mui/material'
+import { Box, Button, Container, InputAdornment, TextField, Typography } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
+import SearchIcon from '@mui/icons-material/Search'
 import ErrorBanner from './components/ErrorBanner'
 import Spinner from './components/Spinner'
 import TaskForm from './components/TaskForm'
@@ -10,6 +11,17 @@ import { useTasks } from './hooks/useTasks'
 function App() {
   const { data: tasks, isPending, isError, error } = useTasks()
   const [formOpen, setFormOpen] = useState(false)
+  const [search, setSearch] = useState('')
+
+  const filteredTasks = tasks
+    ? tasks.filter((task) => {
+        const q = search.toLowerCase()
+        return (
+          task.title.toLowerCase().includes(q) ||
+          (task.description ?? '').toLowerCase().includes(q)
+        )
+      })
+    : undefined
 
   return (
     <Container maxWidth="sm" sx={{ py: 4 }}>
@@ -29,15 +41,33 @@ function App() {
         </Button>
       </Box>
 
+      <TextField
+        fullWidth
+        size="small"
+        placeholder="Search tasks…"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        sx={{ mb: 2 }}
+        slotProps={{
+          input: {
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon fontSize="small" />
+              </InputAdornment>
+            ),
+          },
+        }}
+      />
+
       {isPending && (
         <Box sx={{ py: 4 }}>
           <Spinner label="Loading tasks..." />
         </Box>
       )}
       {isError && <ErrorBanner message={error.message} />}
-      {tasks && (
-        <Box sx={{ height: 'calc(100vh - 180px)', minHeight: 300 }}>
-          <TaskList tasks={tasks} />
+      {filteredTasks && (
+        <Box sx={{ height: 'calc(100vh - 230px)', minHeight: 300 }}>
+          <TaskList tasks={filteredTasks} />
         </Box>
       )}
 
